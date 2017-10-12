@@ -37,3 +37,13 @@ var dreams = [
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
+
+var Airtable = require('airtable');
+var base = new Airtable({apiKey: 'YOUR_API_KEY'}).base('appbHHEyKaW3JuZd6');
+
+
+base('Daily Production').find('recnhAkZx4IuHS4WY', function(err, record) {
+    if (err) { console.error(err); return; }
+    console.log(record);
+});
