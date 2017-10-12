@@ -3,170 +3,59 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Proforma Invoice</title>
-		<link rel="stylesheet" href="style.css">
-		<link rel="license" href="http://www.opensource.org/licenses/mit-license/">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+
+    
+    <link rel="license" href="http://www.opensource.org/licenses/mit-license/">
 		<script src="client.js"></script>
 	</head>
-	<body>
-		<header>
-		
-			
-			<span><img alt="" src="logo.png"><input type="file" accept="image/*"></span>
-				<h1>Invoice<span contenteditable>#</span></h1>
+	<body><div class="panel panel-default">
+  <div class="panel-heading">Dynamic Form Fields - Add & Remove Multiple fields</div>
+  <div class="panel-heading">Education Experience</div>
+  <div class="panel-body">
+  
+  <div id="education_fields">
+          
+        </div>
+       <div class="col-sm-3 nopadding">
+  <div class="form-group">
+    <input type="text" class="form-control" id="Schoolname" name="Schoolname[]" value="" placeholder="School name">
+  </div>
+</div>
+<div class="col-sm-3 nopadding">
+  <div class="form-group">
+    <input type="text" class="form-control" id="Major" name="Major[]" value="" placeholder="Major">
+  </div>
+</div>
+<div class="col-sm-3 nopadding">
+  <div class="form-group">
+    <input type="text" class="form-control" id="Degree" name="Degree[]" value="" placeholder="Degree">
+  </div>
+</div>
 
-				<h2>Cocoon Worldwide, LLC.<br/>13931 Central Ave.<br/>Chino, CA 91710<br/>hello@thecocoon.io</h2>
-		</header>
-		<article>
-		
-<hr class="subtle">
-		<!-- 	<table class="meta">
-				<tr>
-					<th><span contenteditable>Invoice #</span></th>
-					<td><span contenteditable>101138</span></td>
-				</tr>
-				<tr>
-					<th><span contenteditable>Bill to:</span></th>
-					<td><span contenteditable>101138</span></td>
-				</tr>
-				<tr>
-					<th><span contenteditable>Date</span></th>
-					<td><span contenteditable>January 1, 2012</span></td>
-				</tr>
-				<tr>
-					<th><span contenteditable>Amount Due</span></th>
-					<td><span id="prefix" contenteditable>$</span><span>600.00</span></td>
-				</tr>
-			</table> -->
-
-
-			<table class="meta">
-				
-				<tr>
-					<td class="billtocell" width="200">
-						<h2>
-							BILL TO
-						</h2><br>
-						<div class="billto" contenteditable>
-							Lokai<br>
-							Lokai Holdings LLC.<br>
-							36 East 31st Street<br>
-							Suite 602<br>
-							New York, NY 10016<br>
-						</div>
-					</td>
-					<td class="datecell">
-						<h2>
-							DATE
-						</h2><br>
-						<span contenteditable>
-						07/11/2016
-						</span>
-					</td>
-
-					
-	
-					<td class="duecell">
-						<h2>
-							DUE DATE
-						</h2><br>
-
-						<span contenteditable>
-						07/11/2016
-						</span>
-					</td>
-
-					<td class="paycell">
-						<h2>
-							PLEASE PAY
-						</h2><br>
-						<span>600.00</span>
-						</span>
-
-					</td>
-				</tr>
-			</table>
-		
-<hr class="subtle">
-			<table class="inventory">
-				<thead>
-					<tr>
-						<th><span>Item</span></th>
-						<th><span>Description</span></th>
-						<th><span>Rate</span></th>
-						<th><span>Quantity</span></th>
-						<th><span>Total</span></th>
-						<th><span>Progress</span></th>
-						<th><span>Total Due</span></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td><a class="cut">-</a><span contenteditable>Front End Consultation</span></td>
-						<td><span contenteditable>Experience Review</span></td>
-						<td><span data-prefix>$</span><span contenteditable>150.00</span></td>
-						<td><span contenteditable>4</span></td>
-						<td><span data-prefix>$</span><span>600.00</span></td>
-						<td><span contenteditable>50%</span></td>
-						<td><span data-prefix>$</span><span>600.00</span></td>
-					</tr>
-				</tbody>
-			</table>
-			<a class="add">+</a>
-			
-<hr class="subtle">
-	<!-- 		<table class="balance">
-				<tr>
-					<th><span contenteditable>Total</span></th>
-					<td><span data-prefix>$</span><span>600.00</span></td>
-				</tr>
-				<tr>
-					<th><span contenteditable>Amount Paid</span></th>
-					<td><span data-prefix>$</span><span contenteditable>0.00</span></td>
-				</tr>
-				<tr>
-					<th><span contenteditable>Balance Due</span></th>
-					<td><span data-prefix>$</span><span>600.00</span></td>
-				</tr>
-			</table> -->
-
-				<table class="balance">
-				<tr>
-					<td><span class="amtpdlabel">Total</span>
-					<span class="amtpd" data-prefix>$</span><span class="amtpd">600.00</span></td>
-				</tr>
-				<tr>
-					
-					<td><span class="amtpdlabel">Amount Paid</span><span class="amtpd" data-prefix>-$</span><span class="amtpd" contenteditable>600.00</span></td>
-				</tr>
-			
-				<tr>
-					
-					<td><span class="label">Total Due</span><span class="totalamt" data-prefix>$</span><span class="totalamt" contenteditable>600.00</span></td>
-				</tr>
-			
-			</table>
-
-
-
-
-
-				<table class="intro">
-				<tr>
-				<td>
-				<span class="recip">NOTE:</span>
-					<p class="intropar" contenteditable>
-PLS WIRE/BOOK TRANSFER TO CHASE BANK A/C NO 990860355
-<br/>Routing 322271627
-<br/>SWIFT CHASUS33
-<br/>NO CHECKS PLEASE
- 
-					</p>
-					</td>
-				</tr>
-				
-			</table>
-		</article>
-
+<div class="col-sm-3 nopadding">
+  <div class="form-group">
+    <div class="input-group">
+      <select class="form-control" id="educationDate" name="educationDate[]">
+      
+        <option value="">Date</option>
+        <option value="2015">2015</option>
+        <option value="2016">2016</option>
+        <option value="2017">2017</option>
+        <option value="2018">2018</option>
+      </select>
+      <div class="input-group-btn">
+        <button class="btn btn-success" type="button"  onclick="education_fields();"> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="clear"></div>
+  
 
 	</body>
 </html>
