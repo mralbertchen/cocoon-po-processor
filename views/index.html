@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>卡坤生产日报表</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
@@ -13,52 +13,95 @@
 </head>
 <body>
 
-<div class="container-fluid">
-<div class="panel panel-default">
-  <div class="panel-heading">Dynamic Form Fields - Add & Remove Multiple fields</div>
-  <div class="panel-heading">Education Experience</div>
-  <div class="panel-body">
-  
-  <div id="education_fields">
-          
-        </div>
-       <div class="col-sm-3 nopadding">
-  <div class="form-group">
-    <input type="text" class="form-control" id="Schoolname" name="Schoolname[]" value="" placeholder="School name">
-  </div>
-</div>
-<div class="col-sm-3 nopadding">
-  <div class="form-group">
-    <input type="text" class="form-control" id="Major" name="Major[]" value="" placeholder="Major">
-  </div>
-</div>
-<div class="col-sm-3 nopadding">
-  <div class="form-group">
-    <input type="text" class="form-control" id="Degree" name="Degree[]" value="" placeholder="Degree">
-  </div>
-</div>
-
-<div class="col-sm-3 nopadding">
-  <div class="form-group">
-    <div class="input-group">
-      <select class="form-control" id="educationDate" name="educationDate[]">
-      
-        <option value="">Date</option>
-        <option value="2015">2015</option>
-        <option value="2016">2016</option>
-        <option value="2017">2017</option>
-        <option value="2018">2018</option>
-      </select>
-      <div class="input-group-btn">
-        <button class="btn btn-success" type="button"  onclick="education_fields();"> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> </button>
+  <form method="POST" action="/submit">
+    
+  <div class="jumbotron text-center">
+  <h1>生产日报表</h1>
+  <p>泉州市卡坤家居用品有限公司</p> 
+    <div class="row"></div>
+    <div class="row">
+      <div class="col-sm-1 nopadding"> </div>
+      <div class="col-sm-5 nopadding"> 
+        <input type="text" class="form-control" name="Date" value="" placeholder="日期">
       </div>
+      <div class="col-sm-5 nopadding"> 
+        <input type="text" class="form-control" name="Notes" value="" placeholder="備註">
+      </div>
+      <div class="col-sm-1 nopadding"> </div>
     </div>
   </div>
-</div>
-<div class="clear"></div>
   
+
+<div class="container-fluid">
+  
+  
+  
+    <div class="form-group removeclass1">
+ 
+      <div class="row">
+  
+
+        <div class="col-sm-2 nopadding">
+          <input type="text" class="form-control" name="PO_Num" value="" placeholder="PO订单号">
+        </div>
+        <div class="col-sm-1 nopadding">
+          <input type="text" class="form-control" name="Product" value="" placeholder="产品">
+        </div>
+        <div class="col-sm-2 nopadding">
+          <input type="text" class="form-control" name="Routing" value="" placeholder="工序">
+        </div>
+        <div class="col-sm-1 nopadding">
+          <input type="text" class="form-control" ame="Labor" value="" placeholder="单位耗时">
+        </div>
+        <div class="col-sm-1 nopadding">
+          <input type="text" class="form-control" name="Produced" value="" placeholder="产量">
+        </div>
+        <div class="col-sm-2 nopadding">
+          <input type="text" class="form-control" name="Group" value="" placeholder="组别">
+        </div>
+        <div class="col-sm-1 nopadding">
+          <input type="text" class="form-control" name="People" value="" placeholder="当日此组人数">
+        </div>
+        <div class="col-sm-1 nopadding">
+          <input type="text" class="form-control" name="TotalTime" value="" placeholder="当日此组总工时">
+        </div>
+
+        <div class="col-sm-1 nopadding">
+          <div class="input-group-btn" id="addRowbtn">
+          <button class="btn btn-success btn-block" type="button"  onclick="addRow();"> <span class="glyphicon glyphicon-plus" aria-hidden="true">+</span> </button>
+          </div>
+        </div>
+        
+      </div>
   </div>
+    
+    <div id="nextline">
+      
+    </div>
+    
+    
+    <div class="row">
+      <div class="col-sm-4" ></div>
+      <div class="col-sm-2" >
+        <button type="submit" class="btn btn-info btn-block">
+          确定提交   
+        </button>
+      </div>
+      <div class="col-sm-2" >
+        <button type="reset" class="btn btn-info btn-block">
+          重新再来
+        </button>
+      </div>
+      <div class="col-sm-4"></div>
+    </div>
+
+
+  
+
+  
+
   </div>
+  </form>
   
 	</body>
 </html>

@@ -5,6 +5,14 @@
 var express = require('express');
 var app = express();
 
+var bodyParser = require('body-parser');
+
+//To parse URL encoded data
+app.use(bodyParser.urlencoded({ extended: false }));
+
+//To parse json data
+app.use(bodyParser.json());
+
 // we've started you off with Express, 
 // but feel free to use whatever libs or frameworks you'd like through `package.json`.
 
@@ -16,22 +24,23 @@ app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
 
-app.get("/dreams", function (request, response) {
-  response.send(dreams);
-});
 
 // could also use the POST body instead of query string: http://expressjs.com/en/api.html#req.body
-app.post("/dreams", function (request, response) {
-  dreams.push(request.query.dream);
+app.post("/submit", function (request, response) {
+  console.log(request.body);
+  var people = request.body.People;
+  var po_num = request.body.PO_Num;
+  
+  var i = 0;
+  
+  while (people[i]) {
+    console.log(people[i] + " " + po_num[i]);
+    i++;
+  }
+
   response.sendStatus(200);
 });
 
-// Simple in-memory store for now
-var dreams = [
-  "Find and count some sheep",
-  "Climb a really tall mountain",
-  "Wash the dishes"
-];
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
@@ -40,10 +49,15 @@ var listener = app.listen(process.env.PORT, function () {
 
 
 var Airtable = require('airtable');
-var base = new Airtable({apiKey: 'YOUR_API_KEY'}).base('appbHHEyKaW3JuZd6');
+var base = new Airtable({apiKey: 'keyuNOFhciDxJE9TG'}).base('appbHHEyKaW3JuZd6');
 
 
-base('Daily Production').find('recnhAkZx4IuHS4WY', function(err, record) {
+var test = base('Daily Production').find('recnhAkZx4IuHS4WY', function(err, record) {
     if (err) { console.error(err); return; }
-    console.log(record);
+    
 });
+
+console.log(test);
+
+
+
