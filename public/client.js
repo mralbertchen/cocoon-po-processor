@@ -1,5 +1,12 @@
 
 
+var Airtable = require('airtable');
+var base = new Airtable({apiKey: 'YOUR_API_KEY'}).base('appbHHEyKaW3JuZd6');
+
+base('Daily Production').find('recnhAkZx4IuHS4WY', function(err, record) {
+    if (err) { console.error(err); return; }
+    console.log(record);
+});
 
 
 /* Shivving (IE8 is not supported, but at least it won't look as awful)
