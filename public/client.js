@@ -18,3 +18,5 @@ function addRow() {
    function remove_education_fields(rid) {
 	   $('.removeclass'+rid).remove();
    }
+
+jQuery.datetimepicker.setLocale('ch');

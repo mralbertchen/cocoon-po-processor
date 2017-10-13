@@ -13,7 +13,9 @@
     "express": "^4.16.2",
     "airtable": "^0.5.0",
     "body-parser": "^1.18.2",
-    "bootstrap": "^3.3.7"
+    "bootstrap": "^3.3.7",
+    "datetimepicker": "^0.1.38",
+    "jquery-datetimepicker": "^2.5.10"
   },
   "engines": {
     "node": "8.x"
