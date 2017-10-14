@@ -19,10 +19,11 @@ app.use(bodyParser.json());
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
+app.set('view engine', 'pug');
+
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (request, response) {
-  arrayDates = retrieveDates();
-  console.log(arrayDates);
+  
   response.sendFile(__dirname + '/views/index.html');
 });
 
@@ -33,6 +34,16 @@ app.post("/submit", function (request, response) {
   var people = request.body.People;
   var po_num = request.body.PO_Num;
   
+  var dateinq = new Date(request.body.Date);
+  console.log(dateinq.getMonth());
+  var datestring = dateinq.toISOString();
+  dateExists(datestring,function (arrayDates) { // check if the date already exists
+     if(arrayDates.length) {  response.render('sure', { title: 'Hey', message: 'Hello there!' });} else { console.log('no date!');}
+  
+  })
+  
+  
+  // this is where we iterate through the array data and record the data
   var i = 0;
   
   while (people[i]) {
@@ -40,7 +51,7 @@ app.post("/submit", function (request, response) {
     i++;
   }
 
-  response.sendStatus(200);
+//  response.sendStatus(200);
 });
 
 
@@ -59,23 +70,26 @@ var base = Airtable.base('appXTjlqPfZHIXrqt');
 
 // var test = base('Aggregate Data').select().all;
 
-console.log('start here')
 
-function retrieveDates(){ 
-  // gets a list of dates and returns a variable with an array of all
-  
+
+function dateExists(thisDate, callback){
+
+    console.log('start here')
+
     var arrayDates = [];
-    
-    var test;
-    base('Aggregate Data').select({filterByFormula:"{Date} = '10/6'"
-        // Selecting the first 3 records in Grid view:
-    }).eachPage(function page(records, fetchNextPage) {
+
+
+    var allrecords = base('Aggregate Data').select({filterByFormula: "{Date}='" + thisDate + "'"
+        // Selecting date
+    });
+
+    function pageFunc(records, fetchNextPage) {
         // This function (`page`) will get called for each page of records.
 
+
         records.forEach(function(record) {
-            test = record.get('Date');
-            console.log('added', test);
-            arrayDates.push(test);
+        arrayDates.push((record.fields.Date));
+          // console.log(arrayDates);
         });
 
         // To fetch the next page of records, call `fetchNextPage`.
@@ -83,14 +97,19 @@ function retrieveDates(){
         // If there are no more records, `done` will get called.
         fetchNextPage();
 
-    }, function done(err) {
+    }
+
+
+
+    allrecords.eachPage(pageFunc, function done(err) {
+
+        callback(arrayDates);
         if (err) { console.error(err); return; }
     });
-  
-    console.log('test', test);
-}
 
-// console.log(test);
+}
+  
+
 
 
 

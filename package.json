@@ -15,7 +15,9 @@
     "body-parser": "^1.18.2",
     "bootstrap": "^3.3.7",
     "datetimepicker": "^0.1.38",
-    "jquery-datetimepicker": "^2.5.10"
+    "jquery-datetimepicker": "^2.5.10",
+    "moment": "^2.19.1",
+    "pug": "^0.1.0"
   },
   "engines": {
     "node": "8.x"
