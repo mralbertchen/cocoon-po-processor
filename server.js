@@ -21,6 +21,8 @@ app.use(express.static('public'));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (request, response) {
+  arrayDates = retrieveDates();
+  console.log(arrayDates);
   response.sendFile(__dirname + '/views/index.html');
 });
 
@@ -49,15 +51,46 @@ var listener = app.listen(process.env.PORT, function () {
 
 
 var Airtable = require('airtable');
-var base = new Airtable({apiKey: 'keyuNOFhciDxJE9TG'}).base('appbHHEyKaW3JuZd6');
-
-
-var test = base('Daily Production').find('recnhAkZx4IuHS4WY', function(err, record) {
-    if (err) { console.error(err); return; }
-    
+Airtable.configure({
+    endpointUrl: 'https://api.airtable.com',
+    apiKey: 'keyuNOFhciDxJE9TG'
 });
+var base = Airtable.base('appXTjlqPfZHIXrqt');
 
-console.log(test);
+// var test = base('Aggregate Data').select().all;
+
+console.log('start here')
+
+function retrieveDates(){ 
+  // gets a list of dates and returns a variable with an array of all
+  
+    var arrayDates = [];
+    
+    var test;
+    base('Aggregate Data').select({filterByFormula:"{Date} = '10/6'"
+        // Selecting the first 3 records in Grid view:
+    }).eachPage(function page(records, fetchNextPage) {
+        // This function (`page`) will get called for each page of records.
+
+        records.forEach(function(record) {
+            test = record.get('Date');
+            console.log('added', test);
+            arrayDates.push(test);
+        });
+
+        // To fetch the next page of records, call `fetchNextPage`.
+        // If there are more records, `page` will get called again.
+        // If there are no more records, `done` will get called.
+        fetchNextPage();
+
+    }, function done(err) {
+        if (err) { console.error(err); return; }
+    });
+  
+    console.log('test', test);
+}
+
+// console.log(test);
 
 
 
