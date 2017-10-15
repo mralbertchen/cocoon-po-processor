@@ -47,23 +47,13 @@ app.post("/submit", function (request, response) {
          {  response.sendFile(__dirname + '/views/sure.html'); } else 
            { createRecords(arryReq, function successcallback() {
   
-                response.render('success', arryReq);
+                response.render('success', { returnarray : arryReq });
               });
            }
   
   })
   
   
-  // this is where we iterate through the array data and record the data
-  /*
-  var i = 0;
-  
-  while (people[i]) {
-    console.log(people[i] + " " + po_num[i]);
-    i++;
-  }
-*/
-//  response.sendStatus(200);
 });
 
 
@@ -117,7 +107,8 @@ function createRecords(arrayRecords, callback) {
         var totaltime = [];
 
         var i = 0;
-     
+        var arryGroup = []; // creates an array that holds the name of production groups so people&time are only recorded once
+       
         while (arrayRecords.PO_Num[i]) {
             // push array into local variable to be inserted later
             po_num.push(arrayRecords.PO_Num[i]);
@@ -126,10 +117,20 @@ function createRecords(arrayRecords, callback) {
             labor.push(arrayRecords.Labor[i]);
             produced.push(arrayRecords.Produced[i]);
             group.push(arrayRecords.Group[i]);
-            people.push(arrayRecords.People[i]);
-            totaltime.push(arrayRecords.TotalTime[i]);
+            
+            console.log('indexof: ', arryGroup.indexOf(arrayRecords.Group[i]));
+          
+            if(arryGroup.indexOf(arrayRecords.Group[i]) >= 0) { // if this group already exists then push blank
+                console.log(arrayRecords.Group[i], ' Already exists, skipping ppl/total time');
+                people.push('');
+                totaltime.push('');  
+            } else { // otherwise push what is entered
+              console.log(arrayRecords.Group[i], ' doesn\'t exist, adding');
+              people.push(arrayRecords.People[i]);
+              totaltime.push(arrayRecords.TotalTime[i]);
+              arryGroup.push(arrayRecords.Group[i]); // and push the group in so we don't do it again
+            }
 
-            console.log('product',product);
             i++;
         }
      

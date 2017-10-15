@@ -32,15 +32,20 @@ head
         p &#x6CC9;&#x5DDE;&#x5E02;&#x5361;&#x5764;&#x5BB6;&#x5C45;&#x7528;&#x54C1;&#x6709;&#x9650;&#x516C;&#x53F8;
         |  
         |     
-        .row
-        |   
-        .container-fluid
-        .row
-            .col-sm-4
-            |       
-            .col-sm-4.text-center
-            | SUCCESS!!!!
-            |       
-            .col-sm-4
+    .row
+    |   
+    .container-fluid
+        
+        each val, index in returnarray.Group
+            .row= 'Group : ' + val
+            .row
+                .col-sm-2= 'PO Num: ' + returnarray.PO_Num[index]
+                .col-sm-2= 'Product: ' + returnarray.Product[index]
+                .col-sm-2= 'Routing: ' + returnarray.Routing[index]
+                .col-sm-2= 'Labor: ' + returnarray.Labor[index]
+                .col-sm-2= 'Produced: ' + returnarray.Produced[index]
+        
+        
+        
           
         
