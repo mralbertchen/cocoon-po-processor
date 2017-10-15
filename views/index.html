@@ -19,7 +19,7 @@
 </head>
 <body>
 
-  <form method="POST" action="/submit" id="needs-validation" novalidate>
+  <form method="POST" action="/submit" id="needs-validation">
     
   <div class="jumbotron text-center" style="padding-bottom: 20px;">
   <h1>生产日报表</h1>
@@ -98,51 +98,35 @@
 
         <div class="col-sm-2 nopadding">
           <input type="text" class="form-control" name="PO_Num" value="" placeholder="PO订单号" required>
-          <div class="invalid-feedback">
-            不可空白
-          </div>
+ 
         </div>
         <div class="col-sm-1 nopadding">
           <input type="text" class="form-control" name="Product" value="" placeholder="产品" required>
-          <div class="invalid-feedback">
-            不可空白
-          </div>
+
         </div>
         <div class="col-sm-2 nopadding">
           <input type="text" class="form-control" name="Routing" value="" placeholder="工序" required>
-          <div class="invalid-feedback">
-            不可空白
-          </div>
+  
         </div>
         <div class="col-sm-1 nopadding">
-          <input type="number" class="form-control" ame="Labor" value="" placeholder="单位耗时" required>
-          <div class="invalid-feedback">
-            必填数字
-          </div>
+          <input type="number" class="form-control" name="Labor" value="" placeholder="单位耗时" required>
+
         </div>
         <div class="col-sm-1 nopadding">
           <input type="number" class="form-control" name="Produced" value="" placeholder="产量" required>
-          <div class="invalid-feedback">
-            必填数字
-          </div>
+
         </div>
         <div class="col-sm-2 nopadding">
           <input type="text" class="form-control" name="Group" value="" placeholder="组别" required>
-          <div class="invalid-feedback">
-            不可空白
-          </div>
+
         </div>
         <div class="col-sm-1 nopadding">
           <input type="number" class="form-control" name="People" value="" placeholder="当日此组人数" required>
-          <div class="invalid-feedback">
-            必填数字
-          </div>
+
         </div>
         <div class="col-sm-1 nopadding">
           <input type="number" class="form-control" name="TotalTime" value="" placeholder="当日此组总工时" required>
-          <div class="invalid-feedback">
-            必填数字
-          </div>
+
 
         </div>
 
@@ -159,22 +143,6 @@
       
     </div>
     
-    <script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function() {
-      "use strict";
-      window.addEventListener("load", function() {
-        var form = document.getElementById("needs-validation");
-        form.addEventListener("submit", function(event) {
-          if (form.checkValidity() == false) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-          form.classList.add("was-validated");
-        }, false);
-      }, false);
-    }());
-    </script>
   
   
   

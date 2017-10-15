@@ -19,7 +19,7 @@
 </head>
 <body>
 
-  <form method="POST" action="/submit" id="needs-validation" novalidate>
+  
     
   <div class="jumbotron text-center" style="padding-bottom: 20px;">
   <h1>生产日报表</h1>
@@ -32,7 +32,7 @@
 <div class="container-fluid">
   
  
-    <div class="row">
+    <div class="row" style="padding: 0px 0px 40px;">
       <div class="col-sm-4" ></div>
       <div class="col-sm-4 text-center" >
         此日期已经存在，要覆盖吗？
@@ -44,14 +44,20 @@
     <div class="row">
       <div class="col-sm-4" ></div>
       <div class="col-sm-2" >
+        <form method="POST" action="/overwrite" id="needs-validation" novalidate>
         <button type="submit" class="btn btn-info btn-block">
           确定覆盖   
         </button>
+        </form>
       </div>
       <div class="col-sm-2" >
-        <a href="/"><button class="btn btn-info btn-block">
+        <form method="GET" action="/">
+        
+        <button class="btn btn-info btn-block">
           取消提交
-        </button></a>
+        </button>
+          
+          </form>
       </div>
       <div class="col-sm-4"></div>
     </div>
@@ -62,7 +68,7 @@
   
 
   </div>
-  </form>
+  
   
 	</body>
 </html>
