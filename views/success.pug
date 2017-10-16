@@ -14,7 +14,7 @@ head
     |   
     script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js')
     |    
-    | &#x9;
+    
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js')
     |   
     script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js', integrity='sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4', crossorigin='anonymous')
@@ -32,19 +32,44 @@ head
         p &#x6CC9;&#x5DDE;&#x5E02;&#x5361;&#x5764;&#x5BB6;&#x5C45;&#x7528;&#x54C1;&#x6709;&#x9650;&#x516C;&#x53F8;
         |  
         |     
+        
     .row
+        .col-sm-12.text-center
+            p 报表提交成功，内容如下，如有错误，请重新提交：
+    .row
+        .col-sm-12.text-center
+            p= '日期： ' + returnDate
     |   
-    .container-fluid
+    .container
         
-        each val, index in returnarray.Group
-            .row= 'Group : ' + val
+        each val, index in returnarray
+            table.table-bordered
+                thead
+                    th 组别
+                    th 总人数
+                    th 总工时
+                tbody
+                    tr
+                        td= returnarray[index].Group
+                        td= returnarray[index].People
+                        td= returnarray[index].TotalTime
             .row
-                .col-sm-2= 'PO Num: ' + returnarray.PO_Num[index]
-                .col-sm-2= 'Product: ' + returnarray.Product[index]
-                .col-sm-2= 'Routing: ' + returnarray.Routing[index]
-                .col-sm-2= 'Labor: ' + returnarray.Labor[index]
-                .col-sm-2= 'Produced: ' + returnarray.Produced[index]
-        
+                table.table
+                    thead
+                        th 订单号
+                        th 产品
+                        th 工序
+                        th 单位耗时
+                        th 产量
+                    tbody
+                        each val, i2 in returnarray[index].PO_Num
+                            tr
+                                td= returnarray[index].PO_Num[i2]
+                                td= returnarray[index].Product[i2]
+                                td= returnarray[index].Routing[i2]
+                                td= returnarray[index].Labor[i2]
+                                td= returnarray[index].Produced[i2]
+
         
         
           

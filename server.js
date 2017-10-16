@@ -9,6 +9,8 @@ var bodyParser = require('body-parser');
 
 var arryReq;
 
+var dateToDelete;
+
 //To parse URL encoded data
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -46,8 +48,8 @@ app.post("/submit", function (request, response) {
      if(arrayDates.length) 
          {  response.sendFile(__dirname + '/views/sure.html'); } else 
            { createRecords(arryReq, function successcallback() {
-  
-                response.render('success', { returnarray : arryReq });
+            
+                response.render('success', { returnarray : orgGroup(), returnDate : arryReq.Date });
               });
            }
   
@@ -60,10 +62,43 @@ app.post("/submit", function (request, response) {
 app.post("/overwrite", function (request, response) {
   
   // need to delete record first
-    createRecords(arryReq, function successcallback() {
-  
-      response.render('success', arryReq);
+    base('Daily Production').select({
+    }).eachPage(function page(records, fetchNextPage) {
+        // This function (`page`) will get called for each page of records.
+
+        records.forEach(function(record) {
+            var deleteID = record.get('Link to Date').pop();
+            if (deleteID == dateToDelete) {
+                // if this is the ID to be deleted, delete record
+                //console.log('Link to Date:', deleteID);
+               // console.log('Date to Delete:', dateToDelete);
+                base('Daily Production').destroy(record.id, function(err, deletedRecord) {
+                    if (err) { console.error(err); return; }
+                    console.log('Deleted record', deletedRecord.id);
+                });
+             }
+          
+        });
+
+        // To fetch the next page of records, call `fetchNextPage`.
+        // If there are more records, `page` will get called again.
+        // If there are no more records, `done` will get called.
+        fetchNextPage();
+
+    }, function done(err) {
+        if (err) { console.error(err); return; }
+      
+          base('Aggregate Data').destroy(dateToDelete, function(err, deletedRecord) {
+              if (err) { console.error(err); return; }
+              console.log('Deleted record', deletedRecord.id);
+              createRecords(arryReq, function successcallback() { // now create records
+                response.render('success', { returnarray : orgGroup(), returnDate : arryReq.Date });
+              });
+          });
     });
+
+      
+  
 
 });
 
@@ -184,7 +219,9 @@ function dateExists(thisDate, callback){
 
         records.forEach(function(record) {
         arrayDates.push((record.fields.Date));
-          // console.log(arrayDates);
+        dateToDelete = record.id;
+          
+          console.log('dateToDelete:', dateToDelete);
         });
 
         // To fetch the next page of records, call `fetchNextPage`.
@@ -204,7 +241,46 @@ function dateExists(thisDate, callback){
 
 }
   
+function orgGroup(){
+  // function for organizing the form data by their group
+  var groupArray = [];
+  var groupList = [];
+  var i = 0;
+  var arryIndex = 0; // index for Group array
+  
+  
+  while (arryReq.Group[i]) {
+    if(groupList.indexOf(arryReq.Group[i])<0) {
+      // if this group hasn't been recorded yet
+      groupList.push(arryReq.Group[i]); // record it
+   //   console.log('groupList',groupList);
+      var thisIndex = groupArray.push({'Group':arryReq.Group[i], 'People':arryReq.People[i], 'TotalTime' : arryReq.TotalTime[i],
+                        'PO_Num' : [],
+                        'Product' : [],
+                        'Routing' : [],
+                         'Labor' : [],
+                       'Produced' : []
+                      
+                      }); // push info into the array
+      
+    }
+    arryIndex = groupList.indexOf(arryReq.Group[i]); // get index of the group in the array
+    groupArray[arryIndex].PO_Num.push(arryReq.PO_Num[i]);
+    groupArray[arryIndex].Product.push(arryReq.Product[i]);
+    groupArray[arryIndex].Routing.push(arryReq.Routing[i]);
+    groupArray[arryIndex].Labor.push(arryReq.Labor[i]);
+    groupArray[arryIndex].Produced.push(arryReq.Produced[i]);
 
+    
+   // console.log('groupArray',groupArray);
+    // add data into it
+    
+    i++;
+  }
+  
+  console.log('Group Array', groupArray);
+  return groupArray;
+}
 
 
 
