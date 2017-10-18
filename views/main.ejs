@@ -22,14 +22,32 @@
   <form method="POST" action="/submit" id="needs-validation">
     
   <div class="jumbotron text-center" style="padding-bottom: 20px;">
-  <h1>生产日报表</h1>
-  <p>泉州市卡坤家居用品有限公司</p> 
+  <h1>Purchase Order Processor</h1>
+  <p>Cocoon Worldwide LLC.</p> 
     <div class="row"></div>
     <div class="row">
-      <div class="col-sm-1 nopadding"> </div>
-      <div class="col-sm-5 nopadding"> 
+      <div class="col-sm-4 nopadding"> 
+
+      <input type="text" class="form-control" name="PO_Num" value="" placeholder="PO Number" required />
+      </div>
+      
+      
+      <div class="col-sm-4 nopadding"> 
+        <div class="form-group">
+          <input type="text" name="client" list="clients" class="form-control" id="sel1" required placeholder="Client">
+          <datalist id="clients">
+            <% clients.forEach(function(client){ %>
+            <option><%= client.fields.Name %></option>
+            <% }); %>
+          </datalist>
+
+
+ 
+        </div>
+      </div>
+      <div class="col-sm-4 nopadding"> 
         <div class="input-group date">
-            <input id="datetimepicker" type="text" class="form-control datetimepicker" name="Date" value="" placeholder="日期" required />
+            <input id="datetimepicker" type="text" class="form-control datetimepicker" name="Date" value="" placeholder="PO Date" required />
             <script type="text/javascript">
                 $(function () {
                   $('#datetimepicker').datetimepicker({
@@ -40,14 +58,7 @@
                 });
             </script>
         </div>
-        
       </div>
-      
-      
-      <div class="col-sm-5 nopadding"> 
-        <textarea class="form-control" name="Notes" value="" placeholder="備註"></textarea>
-      </div>
-      <div class="col-sm-1 nopadding"> </div>
     </div>
   </div>
   
@@ -60,29 +71,22 @@
   
 
         <div class="col-sm-2 nopadding text-center">
-          PO订单号
+          Item
         </div>
-        <div class="col-sm-1 nopadding text-center">
-          产品
-        </div>
-        <div class="col-sm-2 nopadding text-center">
-          工序
-        </div>
-        <div class="col-sm-1 nopadding text-center">
-          单位耗时
-        </div>
-        <div class="col-sm-1 nopadding text-center">
-          产量
+        <div class="col-sm-3 nopadding text-center">
+          Description
         </div>
         <div class="col-sm-2 nopadding text-center">
-          组别
+          Price
         </div>
-        <div class="col-sm-1 nopadding text-center">
-          当日此组人数
+        <div class="col-sm-2 nopadding text-center">
+          Quantity
         </div>
-        <div class="col-sm-1 nopadding text-center">
-          当日此组总工时
+        <div class="col-sm-2 nopadding text-center">
+          Total
         </div>
+
+
 
         <div class="col-sm-1 nopadding">
 
@@ -97,37 +101,22 @@
   
 
         <div class="col-sm-2 nopadding">
-          <input type="text" class="form-control" name="PO_Num" value="" placeholder="PO订单号" required>
- 
+          <input type="text" class="form-control SKU" id="SKU1" list="SKUs" name="Item" value="" placeholder="Item" onchange="skuChange(1);" required>
         </div>
-        <div class="col-sm-1 nopadding">
-          <input type="text" class="form-control" name="Product" value="" placeholder="产品" required>
+        <div class="col-sm-3 nopadding">
+          <input type="text" class="form-control Desc" id="Desc1" name="Desc" value="" placeholder="Description" required>
 
         </div>
         <div class="col-sm-2 nopadding">
-          <input type="text" class="form-control" name="Routing" value="" placeholder="工序" required>
+          <input type="number" step="0.01" id="Price1" class="form-control" name="Price" value="" placeholder="Price" required>
   
         </div>
-        <div class="col-sm-1 nopadding">
-          <input type="number" class="form-control" name="Labor" value="" placeholder="单位耗时" required>
-
-        </div>
-        <div class="col-sm-1 nopadding">
-          <input type="number" class="form-control" name="Produced" value="" placeholder="产量" required>
+        <div class="col-sm-2 nopadding">
+          <input type="number" step="0.01" id="Qty1" class="form-control" name="Qty" value="" placeholder="Qty" required>
 
         </div>
         <div class="col-sm-2 nopadding">
-          <input type="text" class="form-control" name="Group" value="" placeholder="组别" required>
-
-        </div>
-        <div class="col-sm-1 nopadding">
-          <input type="number" class="form-control" name="People" value="" placeholder="当日此组人数" required>
-
-        </div>
-        <div class="col-sm-1 nopadding">
-          <input type="number" class="form-control" name="TotalTime" value="" placeholder="当日此组总工时" required>
-
-
+          <input type="number" class="form-control" id="Total1" name="Total" value="" placeholder="Total" readonly>
         </div>
 
         <div class="col-sm-1 nopadding">
@@ -150,18 +139,31 @@
       <div class="col-sm-4" ></div>
       <div class="col-sm-2" >
         <button type="submit" class="btn btn-info btn-block">
-          确定提交   
+          Submit   
         </button>
       </div>
       <div class="col-sm-2" >
         <button type="reset" class="btn btn-info btn-block">
-          重新再来
+          Reset
         </button>
       </div>
       <div class="col-sm-4"></div>
     </div>
 
-
+            <datalist id="SKUs">
+            <script type="text/javascript">
+              var arrSKU = [];
+                var arrDesc = [];
+            </script>
+            <% SKUs.forEach(function(SKU){ %>
+            <option value= "<%= SKU.fields.SKU %>" ><%= SKU.fields.Desc %></option>
+            <script type="text/javascript">
+              arrSKU.push( '<%= SKU.fields.SKU %>' );
+              arrDesc.push( '<%= SKU.fields.Desc %>' );
+            </script>
+            
+            <% }); %>
+          </datalist>
   
 
   

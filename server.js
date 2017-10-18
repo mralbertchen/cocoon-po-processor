@@ -23,12 +23,19 @@ app.use(bodyParser.json());
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
-app.set('view engine', 'pug');
+app.set('view engine', 'ejs');
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (request, response) {
   
-  response.sendFile(__dirname + '/views/index.html');
+  getClients(function(clientList) { 
+      getSKUs(function(SKUList) { 
+        response.render('main', { clients : clientList, SKUs : SKUList });
+      });
+      
+  });
+  
+  
 });
 
 
@@ -113,10 +120,65 @@ Airtable.configure({
     endpointUrl: 'https://api.airtable.com',
     apiKey: 'keyuNOFhciDxJE9TG'
 });
-var base = Airtable.base('appXTjlqPfZHIXrqt');
+var base = Airtable.base('appOMI1QF7ZALwfAP');
 
 // var test = base('Aggregate Data').select().all;
 
+
+
+function getClients(callback) {
+  
+    var arrReturn = [];
+    base('Clients').select({
+        // Selecting the first 3 records in Grid view:
+    }).eachPage(function page(records, fetchNextPage) {
+        // This function (`page`) will get called for each page of records.
+
+        records.forEach(function(record) {
+          //  console.log('Retrieved', record.get('Name'));
+          arrReturn.push(record);
+          
+        });
+
+        // To fetch the next page of records, call `fetchNextPage`.
+        // If there are more records, `page` will get called again.
+        // If there are no more records, `done` will get called.
+        fetchNextPage();
+
+      }, function done(err) {
+          
+          if (err) { console.error(err); return; }
+        
+          callback(arrReturn);
+      });
+}
+
+function getSKUs(callback) {
+  
+    var arrReturn = [];
+    base('SKUs').select({
+        // Selecting the first 3 records in Grid view:
+    }).eachPage(function page(records, fetchNextPage) {
+        // This function (`page`) will get called for each page of records.
+
+        records.forEach(function(record) {
+          //  console.log('Retrieved', record.get('Name'));
+          arrReturn.push(record);
+          
+        });
+
+        // To fetch the next page of records, call `fetchNextPage`.
+        // If there are more records, `page` will get called again.
+        // If there are no more records, `done` will get called.
+        fetchNextPage();
+
+      }, function done(err) {
+          
+          if (err) { console.error(err); return; }
+        
+          callback(arrReturn);
+      });
+}
 
 
 function createRecords(arrayRecords, callback) {
