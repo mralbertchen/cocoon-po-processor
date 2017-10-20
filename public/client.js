@@ -49,10 +49,8 @@ function calcTotal(rowNum){
     var Total = document.getElementById('Total' + rowNum);
   
     var temptotal = Number(Price.value) * Number(Qty.value);
-  
-    console.log(temptotal);
-    temptotal = temptotal.toPrecision(4); // to 2 s.f.
-    console.log(temptotal);
+
+    temptotal = temptotal.toFixed(2); // to 2 s.f.
     Total.value = temptotal;
   
 }
