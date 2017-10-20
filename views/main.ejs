@@ -108,15 +108,15 @@
 
         </div>
         <div class="col-sm-2 nopadding">
-          <input type="number" step="0.01" id="Price1" class="form-control" name="Price" value="" placeholder="Price" required>
+          <input type="number" step="0.01" id="Price1" class="form-control" name="Price" value="" placeholder="Price" onchange="calcTotal(1);" required>
   
         </div>
         <div class="col-sm-2 nopadding">
-          <input type="number" step="0.01" id="Qty1" class="form-control" name="Qty" value="" placeholder="Qty" required>
+          <input type="number" step="0.01" id="Qty1" class="form-control" name="Qty" value="" placeholder="Qty" onchange="calcTotal(1);" required>
 
         </div>
         <div class="col-sm-2 nopadding">
-          <input type="number" class="form-control" id="Total1" name="Total" value="" placeholder="Total" readonly>
+          <input type="number" step="0.01" class="form-control" id="Total1" name="Total" value="" placeholder="Total" readonly>
         </div>
 
         <div class="col-sm-1 nopadding">

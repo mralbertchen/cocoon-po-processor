@@ -43,6 +43,20 @@ function skuChange(rowNum) {
         }
 }
 
+function calcTotal(rowNum){
+    var Price = document.getElementById('Price' + rowNum);
+    var Qty = document.getElementById('Qty' + rowNum);
+    var Total = document.getElementById('Total' + rowNum);
+  
+    var temptotal = Number(Price.value) * Number(Qty.value);
+  
+    console.log(temptotal);
+    temptotal = temptotal.toPrecision(4); // to 2 s.f.
+    console.log(temptotal);
+    Total.value = temptotal;
+  
+}
+
 jQuery.datetimepicker.setLocale('us');
 
 
