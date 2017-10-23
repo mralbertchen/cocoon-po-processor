@@ -74,7 +74,7 @@ app.post("/submit", function (request, response) {
 
 app.post("/overwrite", function (request, response) {
 
-  var reqBody = JSON.parse(request.body.values)
+  var reqBody = JSON.parse(request.body.values);
   console.log(reqBody);
   response.sendStatus(200);
 });
