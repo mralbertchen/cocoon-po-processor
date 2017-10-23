@@ -2,6 +2,7 @@ var room = 1;
 
 var arrSKU = [];
 var arrDesc = [];
+var arrPrice = [];
 
 function addRow() {
  
@@ -13,7 +14,7 @@ function addRow() {
   
 	  divtest.setAttribute("class", "form-group removeclass"+room);
 	  var rdiv = 'removeclass'+room;
-    divtest.innerHTML = ' <div class="row"> <div class="col-sm-2 nopadding"> <input type="text" onchange="skuChange(' + room + ');" class="form-control SKU" id="SKU' + room + '" list="SKUs" name="Item" value="" placeholder="Item" required> </div> <div class="col-sm-3 nopadding"> <input type="text" id="Desc' + room + '" class="form-control Desc" name="Desc" value="" placeholder="Description" required> </div> <div class="col-sm-2 nopadding"> <input type="text" class="form-control" name="Price" value="" placeholder="Price" required> </div> <div class="col-sm-2 nopadding"> <input type="number" class="form-control" name="Qty" value="" placeholder="Qty" required> </div> <div class="col-sm-2 nopadding"> <input type="number" class="form-control" name="Total" value="" placeholder="Total" required> </div> <div class="col-sm-1 nopadding"> <div class="input-group-btn" id="addRowbtn"> <button class="btn btn-success btn-block" type="button" onclick="addRow();"> <span class="glyphicon glyphicon-plus" aria-hidden="true">+</span> </button> </div> </div> </div>';
+    divtest.innerHTML = ' <div class="row"> <div class="col-sm-2 nopadding"> <input type="text" class="form-control SKU" id="SKU' + room + '" list="SKUs" name="Item" value="" placeholder="Item" onchange="skuChange(' + room + ');" required> </div> <div class="col-sm-3 nopadding"> <input type="text" class="form-control Desc" id="Desc' + room + '" name="Desc" value="" placeholder="Description"> </div> <div class="col-sm-2 nopadding"> <input type="number" step="0.01" id="Price' + room + '" class="form-control" name="Price" value="" placeholder="Price" onchange="calcTotal(' + room + ');" required> </div> <div class="col-sm-2 nopadding"> <input type="number" step="0.01" id="Qty' + room + '" class="form-control" name="Qty" value="" placeholder="Qty" onchange="calcTotal(' + room + ');" required> </div> <div class="col-sm-2 nopadding"> <input type="number" step="0.01" class="form-control" id="Total' + room + '" name="Total" value="" placeholder="Total" readonly> </div> <div class="col-sm-1 nopadding"> <div class="input-group-btn" id="addRowbtn"> <button class="btn btn-success btn-block" type="button" onclick="addRow();"> <span class="glyphicon glyphicon-plus" aria-hidden="true">+</span> </button> </div> </div> </div>';
     prevaddbtn.id = 'old';
     var oldroom = room -1
     prevaddbtn.innerHTML = '<button class="btn btn-danger btn-block" type="button" onclick="remove_education_fields(' + oldroom + ');"> <span class="glyphicon glyphicon-minus" aria-hidden="true">-</span> </button>';
@@ -39,6 +40,8 @@ function skuChange(rowNum) {
               
               var Desc = document.getElementById('Desc' + rowNum);
               Desc.value = arrDesc[i];
+              var Price = document.getElementById('Price' + rowNum);
+              Price.value = arrPrice[i];
             }
         }
 }

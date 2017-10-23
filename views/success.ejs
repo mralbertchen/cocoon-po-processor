@@ -1,76 +1,174 @@
-doctype html(lang='en')
-head
-    title &#x5361;&#x5764;&#x751F;&#x4EA7;&#x65E5;&#x62A5;&#x8868;
-    |   
-    meta(charset='utf-8')
-    |   
-    meta(name='viewport', content='width=device-width, initial-scale=1')
-    |   
-    |   
-    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css', integrity='sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M', crossorigin='anonymous')
-    |   
-    link(href='jquery.datetimepicker.min.css', rel='stylesheet')
-    |  
-    |   
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js')
-    |    
-    
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js')
-    |   
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js', integrity='sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4', crossorigin='anonymous')
-    |   
-    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js', integrity='sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1', crossorigin='anonymous')
-    |   
-    script(src='jquery.datetimepicker.full.min.js')
-    |   
-    script(src='client.js')
-    body
-    
-    .jumbotron.text-center(style='padding-bottom: 20px;')
-        h1 &#x751F;&#x4EA7;&#x65E5;&#x62A5;&#x8868;
-        |   
-        p &#x6CC9;&#x5DDE;&#x5E02;&#x5361;&#x5764;&#x5BB6;&#x5C45;&#x7528;&#x54C1;&#x6709;&#x9650;&#x516C;&#x53F8;
-        |  
-        |     
-        
-    .row
-        .col-sm-12.text-center
-            p 报表提交成功，内容如下，如有错误，请重新提交：
-    .row
-        .col-sm-12.text-center
-            p= '日期： ' + returnDate
-    |   
-    .container
-        
-        each val, index in returnarray
-            table.table-bordered
-                thead
-                    th 组别
-                    th 总人数
-                    th 总工时
-                tbody
-                    tr
-                        td= returnarray[index].Group
-                        td= returnarray[index].People
-                        td= returnarray[index].TotalTime
-            .row
-                table.table
-                    thead
-                        th 订单号
-                        th 产品
-                        th 工序
-                        th 单位耗时
-                        th 产量
-                    tbody
-                        each val, i2 in returnarray[index].PO_Num
-                            tr
-                                td= returnarray[index].PO_Num[i2]
-                                td= returnarray[index].Product[i2]
-                                td= returnarray[index].Routing[i2]
-                                td= returnarray[index].Labor[i2]
-                                td= returnarray[index].Produced[i2]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Cocoon PO Processor</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  <link href="jquery.datetimepicker.min.css" rel="stylesheet"> 
 
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>   
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+  <script src="jquery.datetimepicker.full.min.js"></script>
+  <script src="client.js"></script>
+
+</head>
+<body>
+
+    
+  <div class="jumbotron text-center" style="padding-bottom: 20px;">
+  <h1>Purchase Order Processor</h1>
+  <p>Cocoon Worldwide LLC.</p> 
+    <div class="row"></div>
+    <div class="row">
+      <div class="col-sm-4 nopadding"> 
+
+      <input type="text" class="form-control" name="PO_Num" value="" placeholder="PO Number" required />
+      </div>
+      
+      
+      <div class="col-sm-4 nopadding"> 
+        <div class="form-group">
+          <input type="text" name="client" list="clients" class="form-control" id="sel1" required placeholder="Client">
+          <datalist id="clients">
+            <% clients.forEach(function(client){ %>
+            <option><%= client.fields.Name %></option>
+            <% }); %>
+          </datalist>
+
+
+ 
+        </div>
+      </div>
+      <div class="col-sm-4 nopadding"> 
+        <div class="input-group date">
+            <input id="datetimepicker" type="text" class="form-control datetimepicker" name="Date" value="" placeholder="PO Date" required />
+            <script type="text/javascript">
+                $(function () {
+                  $('#datetimepicker').datetimepicker({
+                    timepicker:false,
+                    format:'m/d/Y'
+                  });
+
+                });
+            </script>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+<div class="container-fluid">
+  
+      <div class="label_row">
+ 
+      <div class="row">
+  
+
+        <div class="col-sm-2 nopadding text-center">
+          Item
+        </div>
+        <div class="col-sm-3 nopadding text-center">
+          Description
+        </div>
+        <div class="col-sm-2 nopadding text-center">
+          Price
+        </div>
+        <div class="col-sm-2 nopadding text-center">
+          Quantity
+        </div>
+        <div class="col-sm-2 nopadding text-center">
+          Total
+        </div>
+
+
+
+        <div class="col-sm-1 nopadding">
+
+        </div>
         
+      </div>
+    </div>
+  
+    <div class="form-group removeclass1">
+ 
+      <div class="row">
+  
+
+        <div class="col-sm-2 nopadding">
+          <input type="text" class="form-control SKU" id="SKU1" list="SKUs" name="Item" value="" placeholder="Item" onchange="skuChange(1);" required>
+        </div>
+        <div class="col-sm-3 nopadding">
+          <input type="text" class="form-control Desc" id="Desc1" name="Desc" value="" placeholder="Description">
+
+        </div>
+        <div class="col-sm-2 nopadding">
+          <input type="number" step="0.01" id="Price1" class="form-control" name="Price" value="" placeholder="Price" onchange="calcTotal(1);" required>
+  
+        </div>
+        <div class="col-sm-2 nopadding">
+          <input type="number" step="0.01" id="Qty1" class="form-control" name="Qty" value="" placeholder="Qty" onchange="calcTotal(1);" required>
+
+        </div>
+        <div class="col-sm-2 nopadding">
+          <input type="number" step="0.01" class="form-control" id="Total1" name="Total" value="" placeholder="Total" readonly>
+        </div>
+
+        <div class="col-sm-1 nopadding">
+          <div class="input-group-btn" id="addRowbtn">
+          <button class="btn btn-success btn-block" type="button"  onclick="addRow();"> <span class="glyphicon glyphicon-plus" aria-hidden="true">+</span> </button>
+          </div>
+        </div>
         
-          
-        
+      </div>
+    </div>
+    
+    <div id="nextline">
+      
+    </div>
+    
+  
+  
+  
+    <div class="row">
+      <div class="col-sm-4" ></div>
+      <div class="col-sm-2" >
+        <button type="submit" class="btn btn-info btn-block">
+          Submit   
+        </button>
+      </div>
+      <div class="col-sm-2" >
+        <button type="reset" class="btn btn-info btn-block">
+          Reset
+        </button>
+      </div>
+      <div class="col-sm-4"></div>
+    </div>
+
+            <datalist id="SKUs">
+            <script type="text/javascript">
+              var arrSKU = [];
+                var arrDesc = [];
+            </script>
+            <% SKUs.forEach(function(SKU){ %>
+            <option value= "<%= SKU.fields.SKU %>" ><%= SKU.fields.Desc %></option>
+            <script type="text/javascript">
+              arrSKU.push( '<%= SKU.fields.SKU %>' );
+              arrDesc.push( '<%= SKU.fields.Desc %>' );
+              arrPrice.push( '<%= SKU.fields['Default Sale Price'] %>' );
+            </script>
+            
+            <% }); %>
+          </datalist>
+  
+
+  
+
+  </div>
+  
+	</body>
+</html>

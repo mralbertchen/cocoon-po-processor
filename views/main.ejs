@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>卡坤生产日报表</title>
+  <title>Cocoon PO Processor</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
@@ -104,7 +104,7 @@
           <input type="text" class="form-control SKU" id="SKU1" list="SKUs" name="Item" value="" placeholder="Item" onchange="skuChange(1);" required>
         </div>
         <div class="col-sm-3 nopadding">
-          <input type="text" class="form-control Desc" id="Desc1" name="Desc" value="" placeholder="Description" required>
+          <input type="text" class="form-control Desc" id="Desc1" name="Desc" value="" placeholder="Description">
 
         </div>
         <div class="col-sm-2 nopadding">
@@ -160,6 +160,7 @@
             <script type="text/javascript">
               arrSKU.push( '<%= SKU.fields.SKU %>' );
               arrDesc.push( '<%= SKU.fields.Desc %>' );
+              arrPrice.push( '<%= SKU.fields['Default Sale Price'] %>' );
             </script>
             
             <% }); %>

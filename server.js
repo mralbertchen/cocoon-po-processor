@@ -7,8 +7,6 @@ var app = express();
 
 var bodyParser = require('body-parser');
 
-var arryReq;
-
 var dateToDelete;
 
 
@@ -43,71 +41,42 @@ app.get("/", function (request, response) {
 // could also use the POST body instead of query string: http://expressjs.com/en/api.html#req.body
 app.post("/submit", function (request, response) {
   
-  arryReq = request.body;
-  console.log(arryReq);
   
-  var people = request.body.People;
-  var po_num = request.body.PO_Num;
+  console.log(request.body);
+  console.log('array?',request.body.Item.constructor === Array);
+
   
-  var dateinq = new Date(request.body.Date);
-  console.log(dateinq.getMonth());
-  var datestring = dateinq.toISOString();
-  dateExists(datestring,function (arrayDates) { // check if the date already exists
-     if(arrayDates.length) 
-         {  response.sendFile(__dirname + '/views/sure.html'); } else 
-           { createRecords(arryReq, function successcallback() {
-            
-                response.render('success', { returnarray : orgGroup(), returnDate : arryReq.Date });
-              });
-           }
+  var arrReq = request.body;
   
-  })
+  
+  POExists(request.body.PO_Num, function (POid) { // check if PO exists
+      if(POid) { // if exists
+        response.render('overwrite', {  arrReq: arrReq } ); // ask if overwrite, send request array back to template 
+      } else {
+        // if not, check if client exists and create PO with the ID returned via callback
+        clientExists(arrReq.client, function (clientID) {
+            createPO(arrReq, clientID, function () {
+              response.sendStatus(200);
+            }); 
+             
+        });
+        
+        
+      }
+      
+    }
+  )
+  
   
   
 });
 
 
 app.post("/overwrite", function (request, response) {
-  
-  // need to delete record first
-    base('Daily Production').select({
-    }).eachPage(function page(records, fetchNextPage) {
-        // This function (`page`) will get called for each page of records.
 
-        records.forEach(function(record) {
-            var deleteID = record.get('Link to Date').pop();
-            if (deleteID == dateToDelete) {
-                // if this is the ID to be deleted, delete record
-                //console.log('Link to Date:', deleteID);
-               // console.log('Date to Delete:', dateToDelete);
-                base('Daily Production').destroy(record.id, function(err, deletedRecord) {
-                    if (err) { console.error(err); return; }
-                    console.log('Deleted record', deletedRecord.id);
-                });
-             }
-          
-        });
-
-        // To fetch the next page of records, call `fetchNextPage`.
-        // If there are more records, `page` will get called again.
-        // If there are no more records, `done` will get called.
-        fetchNextPage();
-
-    }, function done(err) {
-        if (err) { console.error(err); return; }
-      
-          base('Aggregate Data').destroy(dateToDelete, function(err, deletedRecord) {
-              if (err) { console.error(err); return; }
-              console.log('Deleted record', deletedRecord.id);
-              createRecords(arryReq, function successcallback() { // now create records
-                response.render('success', { returnarray : orgGroup(), returnDate : arryReq.Date });
-              });
-          });
-    });
-
-      
-  
-
+  var reqBody = JSON.parse(request.body.values)
+  console.log(reqBody);
+  response.sendStatus(200);
 });
 
 // listen for requests :)
@@ -119,11 +88,10 @@ var listener = app.listen(process.env.PORT, function () {
 var Airtable = require('airtable');
 Airtable.configure({
     endpointUrl: 'https://api.airtable.com',
-    apiKey: 'keyuNOFhciDxJE9TG'
+    apiKey: process.env.AIRTABLE_API
 });
-var base = Airtable.base('appOMI1QF7ZALwfAP');
+var base = Airtable.base('appQEfsiAExP1LPPn'); // cocoon order sandbox
 
-// var test = base('Aggregate Data').select().all;
 
 
 
@@ -182,109 +150,24 @@ function getSKUs(callback) {
 }
 
 
-function createRecords(arrayRecords, callback) {
+
+
+function POExists(PO_Num, callback) {
   
-  var dateLink;
+  // Parameter: PO Number to check
+  // Callback: UID of the PO Number
   
-   base('Aggregate Data').create({
-      "Date": arrayRecords.Date,
-       "备注": arrayRecords.Notes
-    }, function(err, record) {
-        if (err) { console.error(err); return; }
-        console.log(record.getId());
-        dateLink = record.getId();
-        console.log('dateLink', dateLink);
-     
-        var po_num = [];
-        var product = [];
-        var routing = [];
-        var labor = [];
-        var produced = [];
-        var group = [];
-        var people = [];
-        var totaltime = [];
-
-        var i = 0;
-        var arryGroup = []; // creates an array that holds the name of production groups so people&time are only recorded once
-       
-        while (arrayRecords.PO_Num[i]) {
-            // push array into local variable to be inserted later
-            po_num.push(arrayRecords.PO_Num[i]);
-            product.push(arrayRecords.Product[i]);
-            routing.push(arrayRecords.Routing[i]);
-            labor.push(arrayRecords.Labor[i]);
-            produced.push(arrayRecords.Produced[i]);
-            group.push(arrayRecords.Group[i]);
-            
-            console.log('indexof: ', arryGroup.indexOf(arrayRecords.Group[i]));
-          
-            if(arryGroup.indexOf(arrayRecords.Group[i]) >= 0) { // if this group already exists then push blank
-                console.log(arrayRecords.Group[i], ' Already exists, skipping ppl/total time');
-                people.push('');
-                totaltime.push('');  
-            } else { // otherwise push what is entered
-              console.log(arrayRecords.Group[i], ' doesn\'t exist, adding');
-              people.push(arrayRecords.People[i]);
-              totaltime.push(arrayRecords.TotalTime[i]);
-              arryGroup.push(arrayRecords.Group[i]); // and push the group in so we don't do it again
-            }
-
-            i++;
-        }
-     
-        i = 0;
-
-        while (po_num[i]) {
-          // now we iterate over the array we created to use Airtable API to create each record
-          base('Daily Production').create({
-            "Link to Date": [
-              dateLink
-            ],
-            "物料名稱": product[i],
-            "工序名稱": routing[i],
-            "单位耗时": Number(labor[i]),
-            "產量": Number(produced[i]),
-            "組别": group[i],
-            "当天当组人数": Number(people[i]),
-            "当天当组总工时": Number(totaltime[i]),
-            "订单": po_num[i]
-          }, function(err, record) {
-              if (err) { console.error(err); return; }
-              console.log(record.getId());
-          });
-
-          i++;
-        }
-
-        callback();
-    });
+    var returnThis;
   
-
-  
-  
-}
-
-
-function dateExists(thisDate, callback){
-
-    console.log('start here')
-
-    var arrayDates = [];
-
-
-    var allrecords = base('Aggregate Data').select({filterByFormula: "{Date}='" + thisDate + "'"
-        // Selecting date
-    });
-
-    function pageFunc(records, fetchNextPage) {
+    base('PO List').select({
+        // Selecting the first 3 records in Developer View:
+        filterByFormula : "{PO Number} ='" + PO_Num + "'"
+    }).eachPage(function page(records, fetchNextPage) {
         // This function (`page`) will get called for each page of records.
 
-
         records.forEach(function(record) {
-        arrayDates.push((record.fields.Date));
-        dateToDelete = record.id;
-          
-          console.log('dateToDelete:', dateToDelete);
+            console.log('Found', record.get('PO Number'));
+            returnThis = record.id;
         });
 
         // To fetch the next page of records, call `fetchNextPage`.
@@ -292,58 +175,180 @@ function dateExists(thisDate, callback){
         // If there are no more records, `done` will get called.
         fetchNextPage();
 
-    }
-
-
-
-    allrecords.eachPage(pageFunc, function done(err) {
-
-        callback(arrayDates);
+    }, function done(err) {
         if (err) { console.error(err); return; }
+        callback(returnThis);
+    });
+  
+}
+
+function clientExists(clientName, callback) { 
+  // Parameter: Client Name
+  // Callback: UID of the client ID or newly created ID
+  
+      var returnThis;
+  
+    base('Clients').select({
+        // Selecting the first 3 records in Developer View:
+        filterByFormula : "{Name} ='" + clientName + "'"
+    }).eachPage(function page(records, fetchNextPage) {
+        // This function (`page`) will get called for each page of records.
+
+        records.forEach(function(record) {
+            console.log('Found', record.get('Name'));
+            returnThis = record.id;
+        });
+
+        // To fetch the next page of records, call `fetchNextPage`.
+        // If there are more records, `page` will get called again.
+        // If there are no more records, `done` will get called.
+        fetchNextPage();
+
+    }, function done(err) {
+        if (err) { console.error(err); return; }
+        if (returnThis) { callback(returnThis); } else {
+            // if not found, create it
+            base('Clients').create({
+              "Name": clientName
+            }, function(err, record) {
+                if (err) { console.error(err); return; }
+                console.log('Created Client', record.id);
+                callback(record.id); // callback with the new id
+            });
+
+        }
+          
+          
+        
+    });
+  
+}
+
+
+function SKUExists(arrReq, i, callback) { 
+  // Parameter: Request Body Object Array, i = current iteration
+  // Callback: UID of the SKU found, or the UID of new SKU created
+  
+      var returnThis;
+  
+    base('SKUs').select({
+        // Selecting the first 3 records in Developer View:
+        filterByFormula : "{SKU} ='" + arrReq.Item[i] + "'"
+    }).eachPage(function page(records, fetchNextPage) {
+        // This function (`page`) will get called for each page of records.
+
+        records.forEach(function(record) {
+            console.log('Found', record.get('SKU'));
+            returnThis = record.id;
+        });
+
+        // To fetch the next page of records, call `fetchNextPage`.
+        // If there are more records, `page` will get called again.
+        // If there are no more records, `done` will get called.
+        fetchNextPage();
+
+    }, function done(err) {
+        if (err) { console.error(err); return; }
+        if (returnThis) { // if found, return ID
+          callback(returnThis); // callback with found ID
+        } else {
+            // if not found, create it
+            let thisPrice = Number(arrReq.Price[i]);
+            base('SKUs').create({
+              "SKU": arrReq.Item[i],
+              "Desc": arrReq.Desc[i],
+              "Default Sale Price": thisPrice
+            }, function(err, record) {
+                if (err) { console.error(err); return; }
+                console.log('Created SKU', record.id);
+                callback(record.id); // callback with the new id
+            });
+
+        }
+    });
+  
+}
+
+function createPO(arrReq, clientID, callback) {
+  // Parameter: Request Object Body, UID of Client
+  // Callback: Success or error
+  
+    var reqBod = {}; // this will be the final request object body for iterating
+  
+    base('PO List').create({
+      "PO Number": arrReq.PO_Num,
+      "PO Date": arrReq.Date,
+      "Client": [
+        clientID
+      ]
+    }, function(err, record) {
+        if (err) { console.error(err); return; }
+      
+        
+        var tempReq = { // create a temporary request array
+            "Item" : [], 
+            "Price" : [],
+            "Desc" : [],
+            "Qty" : []
+        };
+      
+        // after created, use this to create items in PO Items list
+        // check if there's only one item, if yes, push it into new array, otherwise proceed as normal
+        if(arrReq.Item.constructor === Array) {
+          // if arr Req contains more than one item then reqBod will just use arrReq
+          
+          reqBod = arrReq;
+          console.log('reqBod', reqBod);
+          
+        } else {
+          
+            tempReq.Item.push(arrReq.Item);
+            tempReq.Price.push(arrReq.Price);
+            tempReq.Desc.push(arrReq.Desc);
+            tempReq.Qty.push(arrReq.Qty);
+            
+            reqBod = tempReq; // if not then it will push the item into the array (to avoid iterating over the string instead)
+              
+        }
+        
+        var i = 0;
+        var loopArray = function (reqBod) { // create asynchronous loop
+            let thisPrice = Number(reqBod.Price[i]);
+            let thisQty = Number(reqBod.Qty[i]);
+          
+            console.log("Price and Qty:", thisPrice, thisQty);
+          
+            // Does this SKU exist?
+            SKUExists(reqBod, i,  function(SKUID) {
+                base('PO Items').create({
+                  "SKU#": [
+                    SKUID
+                  ],
+                  "Unit Price": thisPrice,
+                  "Total Units": thisQty,
+                  "PO #": [
+                    record.id
+                  ]
+                }, function(err, record) {
+                    if (err) { console.error(err); return; }
+                    console.log('Created record', record.id, record.fields["Unit Price"], record.fields["Total Units"]);
+                    console.log("iteration:", i);
+                    i++;
+                    if(i<reqBod.Item.length) { 
+                      loopArray(reqBod);  // if more items to loop
+                    } else { 
+                      callback();  // call back if loop done
+                    }
+                });                  
+            });
+          
+            
+        }
+        
+        loopArray(reqBod); // start loop
+        
+        
+        
     });
 
 }
-  
-function orgGroup(){
-  // function for organizing the form data by their group
-  var groupArray = [];
-  var groupList = [];
-  var i = 0;
-  var arryIndex = 0; // index for Group array
-  
-  
-  while (arryReq.Group[i]) {
-    if(groupList.indexOf(arryReq.Group[i])<0) {
-      // if this group hasn't been recorded yet
-      groupList.push(arryReq.Group[i]); // record it
-   //   console.log('groupList',groupList);
-      var thisIndex = groupArray.push({'Group':arryReq.Group[i], 'People':arryReq.People[i], 'TotalTime' : arryReq.TotalTime[i],
-                        'PO_Num' : [],
-                        'Product' : [],
-                        'Routing' : [],
-                         'Labor' : [],
-                       'Produced' : []
-                      
-                      }); // push info into the array
-      
-    }
-    arryIndex = groupList.indexOf(arryReq.Group[i]); // get index of the group in the array
-    groupArray[arryIndex].PO_Num.push(arryReq.PO_Num[i]);
-    groupArray[arryIndex].Product.push(arryReq.Product[i]);
-    groupArray[arryIndex].Routing.push(arryReq.Routing[i]);
-    groupArray[arryIndex].Labor.push(arryReq.Labor[i]);
-    groupArray[arryIndex].Produced.push(arryReq.Produced[i]);
-
-    
-   // console.log('groupArray',groupArray);
-    // add data into it
-    
-    i++;
-  }
-  
-  console.log('Group Array', groupArray);
-  return groupArray;
-}
-
-
-
