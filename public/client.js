@@ -33,7 +33,7 @@ function skuChange(rowNum) {
       
         console.log('sku', SKU.value);
 
-        for (var i = 0; i < arrSKU.length; i++) { 
+        for (var i = 0; i < arrSKU.length; i++) { // searches for the description to insert
             if (SKU.value == arrSKU[i]) {
               
               console.log('desc', arrDesc[i]);
@@ -42,6 +42,21 @@ function skuChange(rowNum) {
               Desc.value = arrDesc[i];
               var Price = document.getElementById('Price' + rowNum);
               Price.value = arrPrice[i];
+            }
+        }
+}
+
+function clientChange() {
+  
+      var client = document.getElementById('client');
+      
+
+        for (var i = 0; i < arrClients.length; i++) { 
+            if (client.value == arrClients[i]) {
+                            
+              var BillTo = document.getElementById('BillTo');
+              BillTo.value = arrBillTo[i];
+
             }
         }
 }

@@ -26,40 +26,106 @@
   <p>Cocoon Worldwide LLC.</p> 
     <div class="row"></div>
     <div class="row">
-      <div class="col-sm-4 nopadding"> 
+      <div class="col-sm-3 nopadding"> 
+          
+      </div>
+      <div class="col-sm-3 nopadding"> 
 
-      <input type="text" class="form-control" name="PO_Num" value="" placeholder="PO Number" required />
+          
+            
+        
+              <input type="text" class="form-control" name="PO_Num" value="" placeholder="PO Number" required />
+        
+       
       </div>
       
       
-      <div class="col-sm-4 nopadding"> 
-        <div class="form-group">
-          <input type="text" name="client" list="clients" class="form-control" id="sel1" required placeholder="Client">
-          <datalist id="clients">
-            <% clients.forEach(function(client){ %>
-            <option><%= client.fields.Name %></option>
-            <% }); %>
-          </datalist>
+      <div class="col-sm-3 nopadding"> 
+         
+        
+            <div class="form-group">
+              <input type="text" name="client" list="clients" class="form-control" id="client" required placeholder="Client" onchange="clientChange();">
+              <datalist id="clients">
+                <script type="text/javascript">
+                    var arrClients = [];
+                    var arrBillTo = [];
+                </script>
+                <% clients.forEach(function(client){ %>
+                <option><%= client.fields.Name %></option>
+                <script type="text/javascript">
+                    var billto = '<%= JSON.stringify(client.fields['Company Details']) %>';
+                    billto.replace(/(?:&#34;)/g, '')
+                    arrClients.push( '<%= client.fields.Name %>' );
+                    arrBillTo.push( billto );
+                </script>
+                <% }); %>
+              </datalist>
 
+            </div>
+  
 
- 
-        </div>
       </div>
-      <div class="col-sm-4 nopadding"> 
-        <div class="input-group date">
-            <input id="datetimepicker" type="text" class="form-control datetimepicker" name="Date" value="" placeholder="PO Date" required />
-            <script type="text/javascript">
-                $(function () {
-                  $('#datetimepicker').datetimepicker({
-                    timepicker:false,
-                    format:'m/d/Y'
-                  });
+      <div class="col-sm-3 nopadding"> 
 
-                });
-            </script>
-        </div>
+
       </div>
+
+
     </div>
+    
+    <div class="row"> <!-- row 2 -->
+        <div class="col-sm-3 nopadding"> <!-- col 1 -->
+
+
+        </div>
+        <div class="col-sm-3 nopadding"> <!-- col 2 -->
+          
+  
+                 <div class="input-group date">
+                  <input id="datetimepicker" type="text" class="form-control datetimepicker" name="Date" value="" placeholder="PO Date" required />
+                  <script type="text/javascript">
+                      $(function () {
+                        $('#datetimepicker').datetimepicker({
+                          timepicker:false,
+                          format:'m/d/Y'
+                        });
+
+                      });
+                  </script>
+
+              </div>
+
+
+       
+          <p></p>
+              
+      
+                <select label="Ship From" class="form-control" name="ShipFrom" >
+                  <option value="shenzhen">Ships from: Shenzhen</option>
+                  <option value="fujian">Ships from: Fujian</option>
+                </select>
+     
+        </div>
+        <div class="col-sm-3 nopadding"> <!-- col 3 -->
+                 
+                   
+          
+           <textarea class="form-control" id="BillTo" name="BillTo" placeholder="Bill to:" style="height: 94px;"></textarea>
+          
+
+        </div>
+      
+        <div class="col-sm-3 nopadding"> <!-- col 4 -->
+
+
+        </div>
+      
+    </div>
+    
+
+
+
+    
   </div>
   
 
@@ -133,9 +199,10 @@
     </div>
     
   
-  
-  
     <div class="row">
+    
+        
+      
       <div class="col-sm-4" ></div>
       <div class="col-sm-2" >
         <button type="submit" class="btn btn-info btn-block">
@@ -148,12 +215,14 @@
         </button>
       </div>
       <div class="col-sm-4"></div>
+      
     </div>
 
             <datalist id="SKUs">
             <script type="text/javascript">
               var arrSKU = [];
-                var arrDesc = [];
+              var arrDesc = [];
+
             </script>
             <% SKUs.forEach(function(SKU){ %>
             <option value= "<%= SKU.fields.SKU %>" ><%= SKU.fields.Desc %></option>
@@ -164,6 +233,7 @@
             </script>
             
             <% }); %>
+              
           </datalist>
   
 

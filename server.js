@@ -38,6 +38,14 @@ app.get("/", function (request, response) {
 });
 
 
+app.get("/success", function (request, response) {
+  
+
+    response.render('success');
+  
+  
+});
+
 // could also use the POST body instead of query string: http://expressjs.com/en/api.html#req.body
 app.post("/submit", function (request, response) {
   
@@ -56,7 +64,7 @@ app.post("/submit", function (request, response) {
         // if not, check if client exists and create PO with the ID returned via callback
         clientExists(arrReq.client, function (clientID) {
             createPO(arrReq, clientID, function () {
-              response.sendStatus(200);
+              response.render('success', { arrReq: arrReq });
             }); 
              
         });
