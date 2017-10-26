@@ -54,7 +54,7 @@
                 <option><%= client.fields.Name %></option>
                 <script type="text/javascript">
                     var billto = '<%= JSON.stringify(client.fields['Company Details']) %>';
-                    billto.replace(/(?:&#34;)/g, '')
+                    billto = billto.replace(/&#34;/g, "");
                     arrClients.push( '<%= client.fields.Name %>' );
                     arrBillTo.push( billto );
                 </script>

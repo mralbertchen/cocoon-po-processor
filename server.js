@@ -62,7 +62,7 @@ app.post("/submit", function (request, response) {
         response.render('overwrite', {  arrReq: arrReq } ); // ask if overwrite, send request array back to template 
       } else {
         // if not, check if client exists and create PO with the ID returned via callback
-        clientExists(arrReq.client, function (clientID) {
+        clientExists(arrReq.client, arrReq.BillTo, function (clientID) {
             createPO(arrReq, clientID, function () {
               response.render('success', { arrReq: arrReq });
             }); 
@@ -190,7 +190,7 @@ function POExists(PO_Num, callback) {
   
 }
 
-function clientExists(clientName, callback) { 
+function clientExists(clientName, billTo, callback) { 
   // Parameter: Client Name
   // Callback: UID of the client ID or newly created ID
   
@@ -217,7 +217,8 @@ function clientExists(clientName, callback) {
         if (returnThis) { callback(returnThis); } else {
             // if not found, create it
             base('Clients').create({
-              "Name": clientName
+              "Name": clientName,
+              "Company Details": billTo
             }, function(err, record) {
                 if (err) { console.error(err); return; }
                 console.log('Created Client', record.id);
