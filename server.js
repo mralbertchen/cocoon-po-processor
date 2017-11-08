@@ -40,7 +40,7 @@ app.get("/", function (request, response) {
 
 app.get("/success", function (request, response) {
   
-
+// this is just for testing
     response.render('success');
   
   
