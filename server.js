@@ -84,7 +84,13 @@ app.post("/overwrite", function (request, response) {
 
   var reqBody = JSON.parse(request.body.values);
   console.log(reqBody);
-  response.sendStatus(200);
+    // check if client exists and create PO with the ID returned via callback
+  clientExists(reqBody.client, reqBody.BillTo, function (clientID) {
+      createPO(reqBody, clientID, function () {
+        response.render('success', { arrReq: reqBody }); // render success with the requested array
+      }); 
+
+  });
 });
 
 // listen for requests :)
