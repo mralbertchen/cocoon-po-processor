@@ -84,6 +84,11 @@ app.post("/overwrite", function (request, response) {
 
   var reqBody = JSON.parse(request.body.values);
   console.log(reqBody);
+  
+  // delete existing PO
+  
+  
+  
     // check if client exists and create PO with the ID returned via callback
   clientExists(reqBody.client, reqBody.BillTo, function (clientID) {
       createPO(reqBody, clientID, function () {
@@ -366,4 +371,45 @@ function createPO(arrReq, clientID, callback) {
         
     });
 
+}
+
+function deletePO () {
+  
+  base('PO Items').select({
+    }).eachPage(function page(records, fetchNextPage) {
+        // This function (`page`) will get called for each page of records.
+
+        records.forEach(function(record) {
+            var deleteID = record.get('Link to Date').pop();
+            if (deleteID == dateToDelete) {
+                // if this is the ID to be deleted, delete record
+                //console.log('Link to Date:', deleteID);
+               // console.log('Date to Delete:', dateToDelete);
+                base('Daily Production').destroy(record.id, function(err, deletedRecord) {
+                    if (err) { console.error(err); return; }
+                    console.log('Deleted record', deletedRecord.id);
+                });
+             }
+          
+        });
+
+        // To fetch the next page of records, call `fetchNextPage`.
+        // If there are more records, `page` will get called again.
+        // If there are no more records, `done` will get called.
+        fetchNextPage();
+
+    }, function done(err) {
+        if (err) { console.error(err); return; }
+      
+          base('Aggregate Data').destroy(dateToDelete, function(err, deletedRecord) {
+              if (err) { console.error(err); return; }
+              console.log('Deleted record', deletedRecord.id);
+              createRecords(arryReq, function successcallback() { // now create records
+                trelloUpdate(arryReq.Date); // update trello
+                 
+                response.render('success', { returnarray : orgGroup(), returnDate : arryReq.Date });
+                setTimeout(retrieveDatesToGB, 60000); // update geckoboard
+              });
+          });
+    });
 }
