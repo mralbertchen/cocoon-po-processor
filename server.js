@@ -87,15 +87,19 @@ app.post("/overwrite", function (request, response) {
   
   // delete existing PO
   
-  
-  
-    // check if client exists and create PO with the ID returned via callback
-  clientExists(reqBody.client, reqBody.BillTo, function (clientID) {
-      createPO(reqBody, clientID, function () {
-        response.render('success', { arrReq: reqBody }); // render success with the requested array
-      }); 
+  deletePO(reqBody.PO_Num, function() {
+    
+      // after deletion just recreate
+        // check if client exists and create PO with the ID returned via callback
+      clientExists(reqBody.client, reqBody.BillTo, function (clientID) {
+          createPO(reqBody, clientID, function () {
+            response.render('success', { arrReq: reqBody }); // render success with the requested array
+          }); 
 
+      });
   });
+  
+
 });
 
 // listen for requests :)
@@ -373,24 +377,18 @@ function createPO(arrReq, clientID, callback) {
 
 }
 
-function deletePO () {
+function deletePO (PO_Num, callback) {
   
-  base('PO Items').select({
+    var deleteID;
+  // find the PO id first
+    base('PO List').select({
+        // Selecting the first 3 records in Developer View:
+        filterByFormula : "{PO Number} ='" + PO_Num + "'"
     }).eachPage(function page(records, fetchNextPage) {
         // This function (`page`) will get called for each page of records.
 
         records.forEach(function(record) {
-            var deleteID = record.get('Link to Date').pop();
-            if (deleteID == dateToDelete) {
-                // if this is the ID to be deleted, delete record
-                //console.log('Link to Date:', deleteID);
-               // console.log('Date to Delete:', dateToDelete);
-                base('Daily Production').destroy(record.id, function(err, deletedRecord) {
-                    if (err) { console.error(err); return; }
-                    console.log('Deleted record', deletedRecord.id);
-                });
-             }
-          
+            deleteID = record.id;
         });
 
         // To fetch the next page of records, call `fetchNextPage`.
@@ -400,16 +398,45 @@ function deletePO () {
 
     }, function done(err) {
         if (err) { console.error(err); return; }
+        // now that's found, use it to delete stuff
       
-          base('Aggregate Data').destroy(dateToDelete, function(err, deletedRecord) {
-              if (err) { console.error(err); return; }
-              console.log('Deleted record', deletedRecord.id);
-              createRecords(arryReq, function successcallback() { // now create records
-                trelloUpdate(arryReq.Date); // update trello
-                 
-                response.render('success', { returnarray : orgGroup(), returnDate : arryReq.Date });
-                setTimeout(retrieveDatesToGB, 60000); // update geckoboard
-              });
-          });
+            base('PO Items').select({
+              }).eachPage(function page(records, fetchNextPage) {
+                  // This function (`page`) will get called for each page of records.
+
+                  records.forEach(function(record) {
+                      var thisID = record.get('PO #').pop();
+                      if (thisID == deleteID) {
+                          // if this is the ID to be deleted, delete record
+
+                          base('PO Items').destroy(record.id, function(err, deletedRecord) {
+                              if (err) { console.error(err); return; }
+                              console.log('Deleted record', deletedRecord.id);
+                          });
+                       }
+
+                  });
+
+                  // To fetch the next page of records, call `fetchNextPage`.
+                  // If there are more records, `page` will get called again.
+                  // If there are no more records, `done` will get called.
+                  fetchNextPage();
+
+              }, function done(err) {
+                  if (err) { console.error(err); return; }
+
+                    base('PO List').destroy(deleteID, function(err, deletedRecord) {
+                        if (err) { console.error(err); return; }
+                        console.log('Deleted record', deletedRecord.id);
+                        callback();
+                    });
+              });      
+      
+      
+      
+      
+      
     });
+
+
 }
