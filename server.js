@@ -38,10 +38,14 @@ app.get("/", function (request, response) {
 });
 
 
-app.get("/success", function (request, response) {
+app.get("/test", function (request, response) {
   
 // this is just for testing
-    response.render('success');
+    deletePO('008',function() {
+      
+        response.sendStatus(200);
+    });
+    
   
   
 });
@@ -405,7 +409,8 @@ function deletePO (PO_Num, callback) {
                   // This function (`page`) will get called for each page of records.
 
                   records.forEach(function(record) {
-                      var thisID = record.get('PO #').pop();
+                      var thisID = record.get('PO #');
+                     // console.log('thisID', thisID);
                       if (thisID == deleteID) {
                           // if this is the ID to be deleted, delete record
 
