@@ -445,3 +445,15 @@ function deletePO (PO_Num, callback) {
 
 
 }
+
+
+var QuickBooks = require('node-quickbooks')
+ 
+var qbo = new QuickBooks(consumerKey,
+                         consumerSecret,
+                         oauthToken,
+                         oauthTokenSecret,
+                         realmId,
+                         true, // use the sandbox?
+                         true // enable debugging?
+                          ); // set minorversion
