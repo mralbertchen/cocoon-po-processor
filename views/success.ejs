@@ -113,20 +113,28 @@
     %>
     
     <%
-      for(reqBod.Item)
+      var i;
+      var GTotal = 0;
+      for (i = 0; i < reqBod.Item.length; i++) {
+        // loop through the item array for rows in the invoice
     %>
-    
     
 		<tr>
 			<td style="width: 1px; text-align: left;">
-			<p class="p1" style="text-align: center;"><span style="font-size:11px;"><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif;">{tablerow from=$products item=_product}{$_product.Item}</span></span></p>
+			<p class="p1" style="text-align: center;"><span style="font-size:11px;"><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif;"><%= reqBod.Item[i] %></span></span></p>
 			</td>
-			<td style="width: 1px;"><span style="font-size:11px;"><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif;">{$_product.Desc}</span></span></td>
-			<td style="width: 1px;"><span style="font-size:11px;"><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif; text-align: right;"><span style="text-align: right;">${$_product.Price|number_format:2}</span></span></span></td>
-			<td><span style="font-size:11px;"><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif;"><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif; text-align: right;"><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif;">{$_product.Quantity|number_format:0}</span></span></span></span></td>
-			<td><span style="font-size:11px;">$<span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif; text-align: center;">{$TotalAmt = $_product.Quantity * $_product.Price}</span></span><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif; font-size: 11px; text-align: center;">{$TotalAmt|number_format:2}</span><br />
-			<span style="font-size:11px;"><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif; text-align: center;">{$GrandTotal = $GrandTotal + $TotalAmt}</span></span></td>
+			<td style="width: 1px;"><span style="font-size:11px;"><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif;"><%= reqBod.Desc[i] %></span></span></td>
+			<td style="width: 1px;"><span style="font-size:11px;"><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif; text-align: right;"><span style="text-align: right;">$<%= reqBod.Price[i] %></span></span></span></td>
+			<td><span style="font-size:11px;"><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif;"><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif; text-align: right;"><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif;"><%= reqBod.Qty[i] %></span></span></span></span></td>
+			<td><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif; font-size: 11px; text-align: center;">$<%= reqBod.Qty[i] * reqBod.Price[i] %> <% GTotal += reqBod.Qty[i] * reqBod.Price[i] %></span><br />
+			</td>
 		</tr>
+    
+    <%
+    
+      }
+    %>
+    
     
     
 		<tr>
@@ -136,7 +144,7 @@
 			<td style="text-align: right;"> </td>
 			<td style="text-align: right;"> </td>
 			<td style="text-align: right;"><span style="font-size:14px;">Grand Total:</span></td>
-			<td style="text-align: center;"><span style="font-size:14px;"><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif; text-align: center;">${$GrandTotal|number_format:2}</span></span></td>
+			<td style="text-align: center;"><span style="font-size:14px;"><span style="color: rgb(85, 85, 85); font-family: Helvetica, Arial, sans-serif; text-align: center;">$<%= GTotal %></span></span></td>
 		</tr>
 	</tbody>
 </table>
