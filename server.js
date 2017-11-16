@@ -64,7 +64,7 @@ app.post("/submit", function (request, response) {
         // if not, check if client exists and create PO with the ID returned via callback
         clientExists(arrReq.client, arrReq.BillTo, function (clientID) {
             createPO(arrReq, clientID, function () {
-              response.render('success', { arrReq: arrReq });
+              response.render('success', { arrReq: arrReq }); // render success with the requested array
             }); 
              
         });
