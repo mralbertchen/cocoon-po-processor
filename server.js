@@ -40,10 +40,31 @@ app.get("/", function (request, response) {
 
 app.get("/test", function (request, response) {
   
+  
+  var postBody = {
+    url: QuickBooks.REQUEST_TOKEN_URL,
+    oauth: {
+      callback:        'http://localhost:' + port + '/callback/',
+      consumer_key:    process.env.CONSUMER_KEY,
+      consumer_secret: process.env.CONSUMER_SECRET
+    }
+  }
+  request.post(postBody, function (e, r, data) {
+    var requestToken = qs.parse(data)
+    req.session.oauth_token_secret = requestToken.oauth_token_secret
+    console.log(requestToken)
+    res.redirect(QuickBooks.APP_CENTER_URL + requestToken.oauth_token)
+  })
+  
    // testing
+  
+  /*
   qbo.findInvoices(undefined,function (res) {
     console.log(res);
   });
+  
+  */
+  
   //  qbo.createInvoice(testObj, function () { console.log("invoice created."); });
   
   
@@ -448,7 +469,10 @@ function deletePO (PO_Num, callback) {
 
 
 
-var QuickBooks = require('node-quickbooks')
+var QuickBooks = require('node-quickbooks');
+
+
+
  
 var qbo = new QuickBooks(process.env.CONSUMER_KEY,
                          process.env.CONSUMER_SECRET,
@@ -458,6 +482,7 @@ var qbo = new QuickBooks(process.env.CONSUMER_KEY,
                          true, // use the sandbox?
                          true, 4, '2.0' // enable debugging?
                           ); // set minorversion
+
 
 var testObj = {
     "Invoice": {
