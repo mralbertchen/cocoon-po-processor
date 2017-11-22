@@ -456,7 +456,7 @@ var qbo = new QuickBooks(process.env.CONSUMER_KEY,
                          false,
                          process.env.REALMID,
                          true, // use the sandbox?
-                         true // enable debugging?
+                         true, 4, '2.0' // enable debugging?
                           ); // set minorversion
 
 var testObj = {
