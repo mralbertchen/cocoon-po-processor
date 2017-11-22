@@ -447,17 +447,19 @@ function deletePO (PO_Num, callback) {
 }
 
 
-/*
 
-var QuickBooks = require('node-quickbooks')
+
+var QuickBooks = require('node-quickbooks-oauth2')
  
-var qbo = new QuickBooks(consumerKey,
-                         consumerSecret,
-                         oauthToken,
+var qbo = new QuickBooks(process.env.CONSUMER_KEY,
+                         process.env.CONSUMER_SECRET,
+                         process.env.OAUTHTOKEN,
                          false,
-                         realmId,
+                         process.env.REALMID,
                          true, // use the sandbox?
                          true // enable debugging?
                           ); // set minorversion
+
+
                           
-                          */
+                          
