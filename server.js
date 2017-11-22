@@ -40,12 +40,11 @@ app.get("/", function (request, response) {
 
 app.get("/test", function (request, response) {
   
-// this is just for testing
-    deletePO('008',function() {
-      
-        response.sendStatus(200);
-    });
-    
+   // testing
+  qbo.findInvoices(undefined,function (res) {
+    console.log(res);
+  });
+  //  qbo.createInvoice(testObj, function () { console.log("invoice created."); });
   
   
 });
@@ -459,6 +458,144 @@ var qbo = new QuickBooks(process.env.CONSUMER_KEY,
                          true, // use the sandbox?
                          true // enable debugging?
                           ); // set minorversion
+
+var testObj = {
+    "Invoice": {
+        "Deposit": 0,
+        "domain": "QBO",
+        "sparse": false,
+        "Id": "130",
+        "SyncToken": "0",
+        "MetaData": {
+            "CreateTime": "2014-09-19T13:16:17-07:00",
+            "LastUpdatedTime": "2014-09-19T13:16:17-07:00"
+        },
+        "CustomField": [{
+            "DefinitionId": "1",
+            "Name": "Crew #",
+            "Type": "StringType",
+            "StringValue": "102"
+        }],
+        "DocNumber": "1037",
+        "TxnDate": "2014-09-19",
+        "LinkedTxn": [{
+            "TxnId": "100",
+            "TxnType": "Estimate"
+        }],
+        "Line": [{
+            "Id": "1",
+            "LineNum": 1,
+            "Description": "Rock Fountain",
+            "Amount": 275.0,
+            "DetailType": "SalesItemLineDetail",
+            "SalesItemLineDetail": {
+                "ItemRef": {
+                    "value": "5",
+                    "name": "Rock Fountain"
+                },
+                "UnitPrice": 275,
+                "Qty": 1,
+                "TaxCodeRef": {
+                    "value": "TAX"
+                }
+            }
+        }, {
+            "Id": "2",
+            "LineNum": 2,
+            "Description": "Fountain Pump",
+            "Amount": 12.75,
+            "DetailType": "SalesItemLineDetail",
+            "SalesItemLineDetail": {
+                "ItemRef": {
+                    "value": "11",
+                    "name": "Pump"
+                },
+                "UnitPrice": 12.75,
+                "Qty": 1,
+                "TaxCodeRef": {
+                    "value": "TAX"
+                }
+            }
+        }, {
+            "Id": "3",
+            "LineNum": 3,
+            "Description": "Concrete for fountain installation",
+            "Amount": 47.5,
+            "DetailType": "SalesItemLineDetail",
+            "SalesItemLineDetail": {
+                "ItemRef": {
+                    "value": "3",
+                    "name": "Concrete"
+                },
+                "UnitPrice": 9.5,
+                "Qty": 5,
+                "TaxCodeRef": {
+                    "value": "TAX"
+                }
+            }
+        }, {
+            "Amount": 335.25,
+            "DetailType": "SubTotalLineDetail",
+            "SubTotalLineDetail": {}
+        }],
+        "TxnTaxDetail": {
+            "TxnTaxCodeRef": {
+                "value": "2"
+            },
+            "TotalTax": 26.82,
+            "TaxLine": [{
+                "Amount": 26.82,
+                "DetailType": "TaxLineDetail",
+                "TaxLineDetail": {
+                    "TaxRateRef": {
+                        "value": "3"
+                    },
+                    "PercentBased": true,
+                    "TaxPercent": 8,
+                    "NetAmountTaxable": 335.25
+                }
+            }]
+        },
+        "CustomerRef": {
+            "value": "24",
+            "name": "Sonnenschein Family Store"
+        },
+        "CustomerMemo": {
+            "value": "Thank you for your business and have a great day!"
+        },
+        "BillAddr": {
+            "Id": "95",
+            "Line1": "Russ Sonnenschein",
+            "Line2": "Sonnenschein Family Store",
+            "Line3": "5647 Cypress Hill Ave.",
+            "Line4": "Middlefield, CA  94303",
+            "Lat": "37.4238562",
+            "Long": "-122.1141681"
+        },
+        "ShipAddr": {
+            "Id": "25",
+            "Line1": "5647 Cypress Hill Ave.",
+            "City": "Middlefield",
+            "CountrySubDivisionCode": "CA",
+            "PostalCode": "94303",
+            "Lat": "37.4238562",
+            "Long": "-122.1141681"
+        },
+        "SalesTermRef": {
+            "value": "3"
+        },
+        "DueDate": "2014-10-19",
+        "TotalAmt": 362.07,
+        "ApplyTaxAfterDiscount": false,
+        "PrintStatus": "NeedToPrint",
+        "EmailStatus": "NotSet",
+        "BillEmail": {
+            "Address": "Familiystore@intuit.com"
+        },
+        "Balance": 362.07
+    },
+    "time": "2015-07-24T10:48:27.082-07:00"
+};
 
 
                           
