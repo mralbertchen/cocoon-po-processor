@@ -448,7 +448,7 @@ function deletePO (PO_Num, callback) {
 
 
 
-var QuickBooks = require('node-quickbooks-oauth2')
+var QuickBooks = require('node-quickbooks')
  
 var qbo = new QuickBooks(process.env.CONSUMER_KEY,
                          process.env.CONSUMER_SECRET,

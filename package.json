@@ -18,7 +18,7 @@
     "jquery-datetimepicker": "^2.5.10",
     "moment": "^2.19.1",
     "ejs": "^2.5.7",
-    "node-quickbooks-oauth2": "^2.0.13"
+    "node-quickbooks": "^2.0.20"
   },
   "engines": {
     "node": "8.x"
