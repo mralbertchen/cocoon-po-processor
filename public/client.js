@@ -4,6 +4,8 @@ var arrSKU = [];
 var arrDesc = [];
 var arrPrice = [];
 
+
+
 function addRow() {
  
     room++;
@@ -70,10 +72,24 @@ function calcTotal(rowNum){
 
     temptotal = temptotal.toFixed(2); // to 2 s.f.
     Total.value = temptotal;
+    
+    var invoiceTotal = 0;
   
+    for(var i=1;i<room+1;i++) {
+      invoiceTotal += Number(document.getElementById('Total' + i).value);
+      
+      console.log(i, document.getElementById('Total' + i).value);
+    }
+    var changeThis = document.getElementById('invoice-total');
+    
+    changeThis.innerHTML = '$' + invoiceTotal.toLocaleString(undefined, {'minimumFractionDigits':2,'maximumFractionDigits':2});
 }
 
 jQuery.datetimepicker.setLocale('us');
 
+function submitClick(e) {
+  
+    if(!confirm('Are you sure?'))  e.preventDefault();
 
+}
 
